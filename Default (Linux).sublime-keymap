@@ -1,0 +1,4 @@
+[
+	{ "keys": ["f8"], 			"command": "camaleon", "args":{"type":"next"}},
+	{ "keys": ["shift+f8"], "command": "camaleon", "args":{"type":"previous"}}
+]

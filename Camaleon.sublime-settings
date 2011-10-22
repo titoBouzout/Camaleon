@@ -1,0 +1,44 @@
+{
+	"current":0,
+
+	"camaleon" :[
+
+							//office - sun - GROUP I
+							[
+	/*chrome theme*/			"Soda Light.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Solarized (Light).tmTheme"
+							]
+
+							//office - sun - GROUP II
+							,[
+	/*chrome theme*/			"Soda Light.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Twilight.tmTheme"
+							]			
+
+							//office - sun - GROUP III
+							,[
+	/*chrome theme*/			"Soda Light.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Monokai Bright.tmTheme"
+							]
+
+							//vampire - moon- GROUP IV
+							,[
+	/*chrome theme*/			"Soda Dark.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Monokai Bright.tmTheme"
+							]
+
+							//vampire - moon- GROUP V ( any amount of groups you want )
+							,[
+	/*chrome theme*/			"Soda Dark.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Twilight.tmTheme"
+							]
+											
+							//vampire - moon- GROUP VI ( any amount of groups you want )
+							,[
+	/*chrome theme*/			"Soda Dark.sublime-theme",
+	/*colour scheme*/			"Packages/Color Scheme - Default/Solarized (Light).tmTheme"
+							]
+
+
+	]
+}
