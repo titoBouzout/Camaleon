@@ -7,6 +7,7 @@ Installation
 ------------------
 
 1 - Install this package via "Package Control" see: http://wbond.net/sublime_packages/package_control
+
 2 - After installation, Set your current colour scheme to "Solarized (Light)" ( to start cycling correctly )
 
 Usage
