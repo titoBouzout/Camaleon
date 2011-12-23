@@ -3,6 +3,8 @@ Description
 
 Camaleón plugin allows you to quickly cycle between a combination of user defined chrome themes and colours schemes when pressing F8
 
+By pressing CTRL+F8 a random colour schemes will be chosen
+
 Installation 
 ------------------
 

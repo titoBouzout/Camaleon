@@ -2,5 +2,9 @@
     {
         "caption": "Camaleón",
         "command": "camaleon"
+    },
+    {
+        "caption": "Camaleón : Random Colour Scheme",
+        "command": "camaleon_random_colour_scheme"
     }
 ]
