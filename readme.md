@@ -25,3 +25,8 @@ Source / Installation
 ------------------
 
 https://github.com/SublimeText/Camaleon
+
+Forum Thread
+------------------
+
+http://www.sublimetext.com/forum/viewtopic.php?f=5&t=4435
