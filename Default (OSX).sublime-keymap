@@ -1,6 +1,6 @@
 [
-	{ "keys": ["f8"], 			"command": "camaleon", "args":{"type":"next"}},
-	{ "keys": ["shift+f8"], "command": "camaleon", "args":{"type":"previous"}},
+    { "keys": ["f8"],       "command": "camaleon", "args":{"type":"next"}},
+    { "keys": ["shift+f8"], "command": "camaleon", "args":{"type":"previous"}},
 
-	{ "keys": ["ctrl+f8"], "command": "camaleon_random_colour_scheme"}
+    { "keys": ["alt+f8"],   "command": "camaleon_random_colour_scheme"}
 ]
