@@ -69,9 +69,10 @@ class CamaleonCommand(sublime_plugin.WindowCommand):
 class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
 	def run(self):
 		schemes = []
-		for scheme in os.listdir(os.path.join(sublime.packages_path(), 'Color Scheme - Default')):
-			if scheme[-7:] == 'tmTheme':
-				schemes.append(scheme)
+		for dirname, dirnames, filenames in os.walk(sublime.packages_path()):
+		    for filename in filenames:
+				if filename[-7:] == 'tmTheme':
+					schemes.append(os.path.join(dirname, filename))
 		from random import choice
 		scheme = choice(schemes)
 		if scheme != '':
@@ -80,7 +81,7 @@ class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
 			else:
 				sublime_s = sublime.load_settings('Base File.sublime-settings')
 
-			sublime_s.set('color_scheme', "Packages/Color Scheme - Default/"+scheme);
+			sublime_s.set('color_scheme', scheme);
 
 			if int(sublime.version()) >= 2174:
 				sublime.save_settings('Preferences.sublime-settings')
