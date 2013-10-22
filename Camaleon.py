@@ -1,91 +1,127 @@
-# coding=utf8
-import sublime, sublime_plugin
+# -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals
+
+import fnmatch
 import os
+import random
+import sublime, sublime_plugin
+
+PLUGIN_NAME = "Camaleón"
+CONFIG_FILE_NAME = "Camaleon"
+
+def is_st3():
+    return int(sublime.version()) >= 3000
+
+# check if a resource exists, which may either be a plain file name or a full
+# path starting with 'Packages/', using '/' as a platform-independent path sep
+def check_resource_exists(name):
+    if name.startswith("Packages/"):
+        if is_st3():
+            # ST3
+            try:
+                sublime.load_resource(name)
+            except IOError:
+                return False
+            return True
+        else:
+            # ST2 compatibility
+            return os.path.isfile(os.path.join(sublime.packages_path(),
+                                               os.pardir,
+                                               name.replace("/", os.sep)))
+    else:
+        return len(find_resources(name)) > 0
+
+# semi-complete ST2 version of sublime.find_resources
+def _st2_find_resources(pattern):
+    pkgpath = sublime.packages_path()
+    for dirpath, dirnames, filenames in os.walk(pkgpath):
+        for filename in filenames:
+            if fnmatch.fnmatch(filename, pattern):
+                path = os.path.relpath(dirpath, pkgpath).replace(os.sep, "/")
+                yield "Packages/%s/%s" % (path, filename)
+
+# find_resources compatibility wrapper
+def find_resources(pattern):
+    if is_st3():
+        # ST3
+        return sublime.find_resources(pattern)
+    else:
+        # ST2 compatibility
+        return list(_st2_find_resources(pattern))
+
+def friendly_name(name):
+    return name.rsplit("/", 1)[-1].rsplit(".", 1)[0]
+
+
+# set UI theme and colour scheme, checking if they exist
+def set_theme(chrome_theme=None, color_scheme=None):
+    sublime_settings = sublime.load_settings("Preferences.sublime-settings")
+    if chrome_theme is not None:
+        if check_resource_exists(chrome_theme):
+            sublime_settings.set("theme", chrome_theme)
+        else:
+            print("%s: theme '%s' doesn't seem to be installed" %
+                  (PLUGIN_NAME, friendly_name(chrome_theme)))
+    if color_scheme is not None:
+        if check_resource_exists(color_scheme):
+            sublime_settings.set("color_scheme", color_scheme)
+        else:
+            print("%s: colour scheme '%s' doesn't seem to be installed" %
+                  (PLUGIN_NAME, friendly_name(color_scheme)))
+    sublime.save_settings("Preferences.sublime-settings")
+
+# load a given settings preset
+def load_preset(plugin_settings, idx):
+    try:
+        chrome_theme = plugin_settings.get("camaleon")[idx][0]
+        color_scheme = plugin_settings.get("camaleon")[idx][1]
+    except:
+        # that didn't work
+        return
+    set_theme(chrome_theme, color_scheme)
+    plugin_settings.set("current", idx)
+    sublime.save_settings("%s.sublime-settings" % CONFIG_FILE_NAME)
+
+# pick index for next, previous and random preset respectively
+def get_next_preset_idx(current, num):
+    return current + 1 if current + 1 < num else 0
+
+def get_prev_preset_idx(current, num):
+    return current - 1 if current > 0 else num - 1
+
+def get_random_preset_idx(num):
+    return random.randrange(num)
+
 
 class CamaleonCommand(sublime_plugin.WindowCommand):
-	def run(self, type = 'next'):
+    def run(self, type="next"):
+        plugin_settings = sublime.load_settings("%s.sublime-settings" % CONFIG_FILE_NAME)
+        try:
+            current = int(plugin_settings.get("current"))
+        except:
+            # 'current' seems invalid, reset it
+            print("%s: 'current' setting seems invalid, resetting to 0" % PLUGIN_NAME)
+            current = 0
+        try:
+            num = len(plugin_settings.get("camaleon"))
+        except:
+            # the preset object seems entirely invalid, we can't do anything
+            print("%s: invalid preset settings" % PLUGIN_NAME)
+            return
 
-		s = sublime.load_settings('Camaleon.sublime-settings')
-		current = int(s.get('current'))
+        if type == "previous":
+            next_idx = get_prev_preset_idx(current, num)
+        elif type == "random":
+            next_idx = get_random_preset_idx(num)
+        else:
+            next_idx = get_next_preset_idx(current, num)
 
-		try:
-			s.get('camaleon')[current][0]
-		except:
-			current = 0
-			try:
-				s.get('camaleon')[current][0]
-			except:
-				return # total empty
-		try:
-			if type == 'next':
-				s.get('camaleon')[current+1][0]
-				next = current+1
-			else:
-				s.get('camaleon')[current-1][0]
-				next = current-1
-				if next < 0:
-					next = len(s.get('camaleon'))-1
-		except:
-			try:
-				if type == 'next':
-					next = 0
-				else:
-					next = len(s.get('camaleon'))-1
-				s.get('camaleon')[next][0]
-			except:
-				return # total empty
-
-		# chrome change
-
-		#check for soda theme if we are going to switch to soda
-		if s.get('camaleon')[next][0].find('Soda') == 0 and False == os.path.isdir(os.path.join(sublime.packages_path(), 'Theme - Soda')):
-			pass
-		else:
-			if int(sublime.version()) >= 2174:
-				sublime_s = sublime.load_settings('Preferences.sublime-settings')
-			else:
-				sublime_s = sublime.load_settings('Global.sublime-settings')
-			sublime_s.set('theme', s.get('camaleon')[next][0]);
-			if int(sublime.version()) >= 2174:
-				sublime.save_settings('Preferences.sublime-settings')
-			else:
-				sublime.save_settings('Global.sublime-settings')
-
-		# colour scheme change
-		if int(sublime.version()) >= 2174:
-			sublime_s = sublime.load_settings('Preferences.sublime-settings')
-		else:
-			sublime_s = sublime.load_settings('Base File.sublime-settings')
-
-		sublime_s.set('color_scheme', s.get('camaleon')[next][1]);
-		if int(sublime.version()) >= 2174:
-			sublime.save_settings('Preferences.sublime-settings')
-		else:
-			sublime.save_settings('Base File.sublime-settings')
-
-		s.set('current', next);
-		sublime.save_settings('Camaleon.sublime-settings')
+        load_preset(plugin_settings, next_idx)
 
 class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
-	def run(self):
-		schemes = []
-		for dirname, dirnames, filenames in os.walk(sublime.packages_path()):
-		    for filename in filenames:
-				if filename[-7:] == 'tmTheme':
-					schemes.append(os.path.join(dirname, filename))
-		from random import choice
-		scheme = choice(schemes)
-		if scheme != '':
-			if int(sublime.version()) >= 2174:
-				sublime_s = sublime.load_settings('Preferences.sublime-settings')
-			else:
-				sublime_s = sublime.load_settings('Base File.sublime-settings')
-
-			sublime_s.set('color_scheme', scheme);
-
-			if int(sublime.version()) >= 2174:
-				sublime.save_settings('Preferences.sublime-settings')
-			else:
-				sublime.save_settings('Base File.sublime-settings')
-
-			sublime.status_message(u'Camaleon : Loaded colour scheme : '+scheme.decode('utf-8'))
+    def run(self):
+        all_themes = find_resources("*.tmTheme")
+        color_scheme = random.choice(all_themes)
+        set_theme(None, color_scheme)
+        sublime.status_message("%s: picked random colour scheme '%s'" %
+                               (PLUGIN_NAME, friendly_name(color_scheme)))
