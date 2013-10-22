@@ -1,6 +1,5 @@
 [
-    { "keys": ["f8"],       "command": "camaleon", "args":{"type":"next"}},
-    { "keys": ["shift+f8"], "command": "camaleon", "args":{"type":"previous"}},
-
-    { "keys": ["alt+f8"],   "command": "camaleon_random_colour_scheme"}
+    { "keys": ["f8"], "command": "camaleon", "args": { "type": "next" } },
+    { "keys": ["shift+f8"], "command": "camaleon", "args": { "type": "previous" } },
+    { "keys": ["alt+f8"], "command": "camaleon_random_colour_scheme" }
 ]
