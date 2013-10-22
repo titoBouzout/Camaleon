@@ -1,10 +1,18 @@
 [
     {
-        "caption": "Camaleón : Next Color Scheme and Chrome Theme",
-        "command": "camaleon"
+        "caption": "Camaleón: Next Preset",
+        "command": "camaleon", "args": { "type": "next" }
     },
     {
-        "caption": "Camaleón : Random Colour Scheme",
+        "caption": "Camaleón: Previous Preset",
+        "command": "camaleon", "args": { "type": "previous" }
+    },
+    {
+        "caption": "Camaleón: Random Preset",
+        "command": "camaleon", "args": { "type": "random" }
+    },
+    {
+        "caption": "Camaleón: Random Colour Scheme",
         "command": "camaleon_random_colour_scheme"
     }
 ]
