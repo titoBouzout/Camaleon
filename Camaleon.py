@@ -123,5 +123,5 @@ class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
         all_themes = find_resources("*.tmTheme")
         color_scheme = random.choice(all_themes)
         set_theme(None, color_scheme)
-        sublime.status_message("%s: selected colour scheme '%s'" %
+        sublime.status_message("%s: picked random colour scheme '%s'" %
                                (PLUGIN_NAME, friendly_name(color_scheme)))
