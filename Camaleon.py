@@ -12,6 +12,15 @@ CONFIG_FILE_NAME = "Camaleon"
 def is_st3():
     return int(sublime.version()) >= 3000
 
+def print_unicode(*args, **kwargs):
+    if not is_st3():
+        # we explicitly encode everything to UTF-8 since Mac OS' system Python
+        # seems to try ASCII otherwise
+        print(*(s.encode("utf-8") for s in args), **kwargs)
+    else:
+        # we have Python 3 so everyone should handle Unicode properly now
+        print(*args, **kwargs)
+
 # check if a resource exists, which may either be a plain file name or a full
 # path starting with 'Packages/', using '/' as a platform-independent path sep
 def check_resource_exists(name):
@@ -60,14 +69,14 @@ def set_theme(chrome_theme=None, color_scheme=None):
         if check_resource_exists(chrome_theme):
             sublime_settings.set("theme", chrome_theme)
         else:
-            print("%s: theme '%s' doesn't seem to be installed" %
-                  (PLUGIN_NAME, friendly_name(chrome_theme)))
+            print_unicode("%s: theme '%s' doesn't seem to be installed"
+                          % (PLUGIN_NAME, friendly_name(chrome_theme)))
     if color_scheme is not None:
         if check_resource_exists(color_scheme):
             sublime_settings.set("color_scheme", color_scheme)
         else:
-            print("%s: colour scheme '%s' doesn't seem to be installed" %
-                  (PLUGIN_NAME, friendly_name(color_scheme)))
+            print_unicode("%s: colour scheme '%s' doesn't seem to be installed"
+                          % (PLUGIN_NAME, friendly_name(color_scheme)))
     sublime.save_settings("Preferences.sublime-settings")
 
 # load a given settings preset
@@ -95,18 +104,20 @@ def get_random_preset_idx(num):
 
 class CamaleonCommand(sublime_plugin.WindowCommand):
     def run(self, type="next"):
-        plugin_settings = sublime.load_settings("%s.sublime-settings" % CONFIG_FILE_NAME)
+        plugin_settings = sublime.load_settings("%s.sublime-settings"
+                                                % CONFIG_FILE_NAME)
         try:
             current = int(plugin_settings.get("current"))
         except:
             # 'current' seems invalid, reset it
-            print("%s: 'current' setting seems invalid, resetting to 0" % PLUGIN_NAME)
+            print_unicode("%s: 'current' setting seems invalid, resetting to 0"
+                          % PLUGIN_NAME)
             current = 0
         try:
             num = len(plugin_settings.get("camaleon"))
         except:
             # the preset object seems entirely invalid, we can't do anything
-            print("%s: invalid preset settings" % PLUGIN_NAME)
+            print_unicode("%s: invalid preset settings" % PLUGIN_NAME)
             return
 
         if type == "previous":
