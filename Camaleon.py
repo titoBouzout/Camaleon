@@ -34,9 +34,10 @@ def check_resource_exists(name):
             return True
         else:
             # ST2 compatibility
-            return os.path.isfile(os.path.join(sublime.packages_path(),
-                                               os.pardir,
-                                               name.replace("/", os.sep)))
+            fpath = os.path.normpath(os.path.join(sublime.packages_path(),
+                                                  os.pardir,
+                                                  name.replace("/", os.sep)))
+            return os.path.isfile(fpath)
     else:
         return len(find_resources(name)) > 0
 
