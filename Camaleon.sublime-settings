@@ -1,10 +1,6 @@
 // Place all your custom presets in the `Packages/User/Camaleon.sublime-settings`
 // file.
 {
-    // The currently selected preset. This is just for housekeeping and doesn't
-    // need to be changed manually.
-    "current": 0,
-
     // List of user-configurable presets.
     "camaleon": [
         // Sun

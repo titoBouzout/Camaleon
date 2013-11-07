@@ -7,7 +7,9 @@ import random
 import sublime, sublime_plugin
 
 PLUGIN_NAME = "Camaleón"
-CONFIG_FILE_NAME = "Camaleon"
+ST_PREFERENCES = "Preferences.sublime-settings"
+PLUGIN_PREFERENCES = "Camaleon.sublime-settings"
+PLUGIN_STATE = "Camaleon.selected-preset"
 
 def is_st3():
     return int(sublime.version()) >= 3000
@@ -65,7 +67,7 @@ def friendly_name(name):
 
 # set UI theme and colour scheme, checking if they exist
 def set_theme(chrome_theme=None, color_scheme=None):
-    sublime_settings = sublime.load_settings("Preferences.sublime-settings")
+    sublime_settings = sublime.load_settings(ST_PREFERENCES)
     if chrome_theme is not None:
         if check_resource_exists(chrome_theme):
             sublime_settings.set("theme", chrome_theme)
@@ -78,10 +80,10 @@ def set_theme(chrome_theme=None, color_scheme=None):
         else:
             print_unicode("%s: colour scheme '%s' doesn't seem to be installed"
                           % (PLUGIN_NAME, friendly_name(color_scheme)))
-    sublime.save_settings("Preferences.sublime-settings")
+    sublime.save_settings(ST_PREFERENCES)
 
 # load a given settings preset
-def load_preset(plugin_settings, idx):
+def load_preset(plugin_settings, plugin_state, idx):
     try:
         chrome_theme = plugin_settings.get("camaleon")[idx][0]
         color_scheme = plugin_settings.get("camaleon")[idx][1]
@@ -89,8 +91,8 @@ def load_preset(plugin_settings, idx):
         # that didn't work
         return
     set_theme(chrome_theme, color_scheme)
-    plugin_settings.set("current", idx)
-    sublime.save_settings("%s.sublime-settings" % CONFIG_FILE_NAME)
+    plugin_state.set("current", idx)
+    sublime.save_settings(PLUGIN_STATE)
 
 # pick index for next, previous and random preset respectively
 def get_next_preset_idx(current, num):
@@ -105,10 +107,10 @@ def get_random_preset_idx(num):
 
 class CamaleonCommand(sublime_plugin.WindowCommand):
     def run(self, type="next"):
-        plugin_settings = sublime.load_settings("%s.sublime-settings"
-                                                % CONFIG_FILE_NAME)
+        plugin_settings = sublime.load_settings(PLUGIN_PREFERENCES)
+        plugin_state = sublime.load_settings(PLUGIN_STATE)
         try:
-            current = int(plugin_settings.get("current"))
+            current = int(plugin_state.get("current", 0))
         except:
             # 'current' seems invalid, reset it
             print_unicode("%s: 'current' setting seems invalid, resetting to 0"
@@ -128,7 +130,7 @@ class CamaleonCommand(sublime_plugin.WindowCommand):
         else:
             next_idx = get_next_preset_idx(current, num)
 
-        load_preset(plugin_settings, next_idx)
+        load_preset(plugin_settings, plugin_state, next_idx)
 
 class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
     def run(self):
