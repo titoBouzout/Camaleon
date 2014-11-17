@@ -4,15 +4,19 @@ from __future__ import print_function, unicode_literals
 import fnmatch
 import os
 import random
-import sublime, sublime_plugin
+
+import sublime
+import sublime_plugin
 
 PLUGIN_NAME = "Camaleón"
 ST_PREFERENCES = "Preferences.sublime-settings"
 PLUGIN_PREFERENCES = "Camaleon.sublime-settings"
 PLUGIN_STATE = "Camaleon.selected-preset"
 
+
 def is_st3():
     return int(sublime.version()) >= 3000
+
 
 def print_unicode(*args, **kwargs):
     if not is_st3():
@@ -22,6 +26,7 @@ def print_unicode(*args, **kwargs):
     else:
         # we have Python 3 so everyone should handle Unicode properly now
         print(*args, **kwargs)
+
 
 # check if a resource exists, which may either be a plain file name or a full
 # path starting with 'Packages/', using '/' as a platform-independent path sep
@@ -43,6 +48,7 @@ def check_resource_exists(name):
     else:
         return len(find_resources(name)) > 0
 
+
 # semi-complete ST2 version of sublime.find_resources
 def _st2_find_resources(pattern):
     pkgpath = sublime.packages_path()
@@ -52,6 +58,7 @@ def _st2_find_resources(pattern):
                 path = os.path.relpath(dirpath, pkgpath).replace(os.sep, "/")
                 yield "Packages/%s/%s" % (path, filename)
 
+
 # find_resources compatibility wrapper
 def find_resources(pattern):
     if is_st3():
@@ -60,6 +67,7 @@ def find_resources(pattern):
     else:
         # ST2 compatibility
         return list(_st2_find_resources(pattern))
+
 
 def friendly_name(name):
     return name.rsplit("/", 1)[-1].rsplit(".", 1)[0]
@@ -84,6 +92,7 @@ def set_theme(chrome_theme=None, color_scheme=None, extra_settings={}):
         sublime_settings.set(key, value)
     sublime.save_settings(ST_PREFERENCES)
 
+
 # load a given settings preset
 def load_preset(plugin_settings, plugin_state, idx):
     try:
@@ -101,12 +110,15 @@ def load_preset(plugin_settings, plugin_state, idx):
     plugin_state.set("current", idx)
     sublime.save_settings(PLUGIN_STATE)
 
+
 # pick index for next, previous and random preset respectively
 def get_next_preset_idx(current, num):
     return current + 1 if current + 1 < num else 0
 
+
 def get_prev_preset_idx(current, num):
     return current - 1 if current > 0 else num - 1
+
 
 def get_random_preset_idx(num):
     return random.randrange(num)
@@ -138,6 +150,7 @@ class CamaleonCommand(sublime_plugin.WindowCommand):
             next_idx = get_next_preset_idx(current, num)
 
         load_preset(plugin_settings, plugin_state, next_idx)
+
 
 class CamaleonRandomColourSchemeCommand(sublime_plugin.WindowCommand):
     def run(self):
