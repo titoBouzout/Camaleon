@@ -50,5 +50,21 @@
             null,
             "Packages/Color Scheme - Default/Espresso Libre.tmTheme"
         ]*/
+
+        // Optionally, a third item may be specified for a preset, a dict
+        // specifying additional ST preferences to set when switching to this
+        // preset:
+        /*[
+            "Soda Light.sublime-theme",
+            "Packages/Color Scheme - Default/Solarized (Light).tmTheme",
+            {
+                "soda_classic_tabs": true
+            }
+        ]*/
+        // Any setting that can be set in the user preferences file can be
+        // specified here. Note that switching to a different preset will not
+        // "undo" the settings change; as such, once you specify a given setting
+        // for one preset, it's generally necessary to specify it with the 
+        // desired values for *all* presets.
     ]
 }

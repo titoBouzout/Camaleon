@@ -66,7 +66,7 @@ def friendly_name(name):
 
 
 # set UI theme and colour scheme, checking if they exist
-def set_theme(chrome_theme=None, color_scheme=None):
+def set_theme(chrome_theme=None, color_scheme=None, extra_settings={}):
     sublime_settings = sublime.load_settings(ST_PREFERENCES)
     if chrome_theme is not None:
         if check_resource_exists(chrome_theme):
@@ -80,6 +80,8 @@ def set_theme(chrome_theme=None, color_scheme=None):
         else:
             print_unicode("%s: colour scheme '%s' doesn't seem to be installed"
                           % (PLUGIN_NAME, friendly_name(color_scheme)))
+    for key, value in extra_settings.items():
+        sublime_settings.set(key, value)
     sublime.save_settings(ST_PREFERENCES)
 
 # load a given settings preset
@@ -87,10 +89,15 @@ def load_preset(plugin_settings, plugin_state, idx):
     try:
         chrome_theme = plugin_settings.get("camaleon")[idx][0]
         color_scheme = plugin_settings.get("camaleon")[idx][1]
+        try:
+            extra_settings = plugin_settings.get("camaleon")[idx][2]
+        except IndexError:
+            # the third element is optional
+            extra_settings = {}
     except:
         # that didn't work
         return
-    set_theme(chrome_theme, color_scheme)
+    set_theme(chrome_theme, color_scheme, extra_settings)
     plugin_state.set("current", idx)
     sublime.save_settings(PLUGIN_STATE)
 
