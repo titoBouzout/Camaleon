@@ -33,10 +33,10 @@ Package Settings -> Camaleón -> Settings – Default*.
 ## About
 The source code can be found on [GitHub][src]. There is also a [forum thread][forum].
 
-[src]: https://github.com/SublimeText/Camaleon
+[src]: https://github.com/titoBouzout/Camaleon
 [forum]: http://www.sublimetext.com/forum/viewtopic.php?f=5&t=4435
 
-Copyright (C) 2012 Tito Bouzout <tito.bouzout@gmail.com>    
+Copyright (C) 2012 Tito Bouzout <tito.bouzout@gmail.com>
 Copyright (C) 2013, 2014 Felix Krull <f_krull@gmx.de>
 
 This license apply to all the files inside this program unless noted
