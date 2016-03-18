@@ -3,10 +3,9 @@ Camaleón -- quick-cycle Sublime theme and colour scheme
 This plugin allows you to quickly cycle through a set of user-defined UI theme/
 colour scheme combinations.
 
-## Installation
-Use [Package Control][pkgctrl].
+# Installation
 
-[pkgctrl]: https://sublime.wbond.net/
+Download or clone the contents of this repository to a folder named exactly as the package name into the Packages/ folder of ST.
 
 ## Usage
 By default, pressing `F8` will cycle to the next preset, `Shift+F8` will switch
